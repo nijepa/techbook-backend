@@ -1,0 +1,39 @@
+{
+  "name": "odinbook_backend",
+  "version": "1.0.0",
+  "description": "odinbook",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/app.js",
+    "test": "ss"
+  },
+  "repository": {
+    "type": "git",
+    "url": "nijepa"
+  },
+  "keywords": [
+    "odinbook"
+  ],
+  "author": "Nikola Pavicevic",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.2",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "validator": "^13.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "nodemon": "^2.0.4"
+  }
+}
