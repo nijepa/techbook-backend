@@ -6,7 +6,7 @@
   "type": "module",
   "engines": { "node": "14.4.0" },
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node src/app.js",
     "test": "ss"
   },
   "repository": {
