@@ -4,6 +4,7 @@ import express from 'express';
 import { connectDB } from './config/db.js'
 import models from './models/index.js';
 import routes from './routes/index.js';
+import history from 'connect-history-api-fallback';
 
 const app = express();
 
@@ -56,8 +57,20 @@ app.get('*', function (req, res, next) {
 
 //const auth = require('./routes/auth.js');
 //app.use('/auth', auth);
-import history from 'connect-history-api-fallback';
-app.use(history());
+
+// Middleware for serving '/dist' directory
+const staticFileMiddleware = express.static('dist');
+
+// 1st call for unredirected requests 
+app.use(staticFileMiddleware);
+
+// Support history api 
+app.use(history({
+  index: '/dist/index.html'
+}));
+
+// 2nd call for redirected requests
+app.use(staticFileMiddleware);
 
 connectDB().then(async () => {
   app.listen(process.env.PORT, () =>
