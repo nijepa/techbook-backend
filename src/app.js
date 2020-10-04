@@ -66,7 +66,7 @@ app.use(staticFileMiddleware);
 
 // Support history api 
 app.use(history({
-  index: '/dist/index.html'
+  index: '/index.html'
 }));
 
 // 2nd call for redirected requests
