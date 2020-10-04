@@ -56,6 +56,8 @@ app.get('*', function (req, res, next) {
 
 //const auth = require('./routes/auth.js');
 //app.use('/auth', auth);
+import history from 'connect-history-api-fallback';
+app.use(history());
 
 connectDB().then(async () => {
   app.listen(process.env.PORT, () =>
