@@ -66,7 +66,7 @@ app.get('*', function (req, res, next) {
 
 // Support history api 
 app.use(history({
-  index: '/index.html'
+  index: '/dist/index.html'
 }));
 
 // 2nd call for redirected requests
