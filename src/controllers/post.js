@@ -1,5 +1,3 @@
-//import Post from '../models/post.js';
-
 /* List of all posts */
 const post_list = async (req, res) => {
   const posts = await req.context.models.Post.find()
@@ -73,7 +71,6 @@ const post_comment_delete = async (req, res, next) => {
   const comment = await req.context.models.Comment.findById(
     req.params.commentId,
   );
-  //const comment = await req.context.models.Comment.findOne({ _id: req.body.id });
   if (comment) {
     await comment.remove();
   }
@@ -86,6 +83,7 @@ const post_like = async (req, res, next) => {
   const upPost = await req.context.models.Post.findOne({
     _id: req.params.postId, likes: {$in: req.body.user}}
   ).populate('comments');
+
   if (upPost) {
     const post = await req.context.models.Post.findOneAndUpdate({ 
       _id: req.params.postId }, 
@@ -101,9 +99,6 @@ const post_like = async (req, res, next) => {
     ).catch((error) => next(new BadRequestError(error)));
     return res.send(post);
   }
-/*   const upPost = await req.context.models.Post.findById(
-    req.body.id,
-  ).populate('comments'); */
 };
 
 /* Comment Like */
@@ -111,6 +106,7 @@ const comment_like = async (req, res, next) => {
   const upComment = await req.context.models.Comment.findOne({
     _id: req.params.commentId, likes: {$in: req.body.user}}
   );
+
   if (upComment) {
     const comment = await req.context.models.Comment.findOneAndUpdate({ 
       _id: req.params.commentId }, 
@@ -149,8 +145,8 @@ const post_update = async (req, res, next) => {
   
   const postNew = await req.context.models.Post.findById(
     post._id,
-  )
-  .populate('user');
+  ).populate('user');
+
   return res.send(postNew);
 };
 
@@ -159,6 +155,7 @@ const post_delete = async (req, res) => {
   const post = await req.context.models.Post.findById(
     req.params.postId,
   );
+
   if (post) {
     await post.remove();
   }
@@ -177,4 +174,4 @@ export {
         post_like,
         post_dislike,
         comment_like
-      };
+};

@@ -14,7 +14,6 @@ import { getFriends,
           acceptFriendInvitation,
           unFriend } from '../controllers/friends.js'
 import auth from '../middleware/auth.js';
-import admin from '../middleware/admin.js'; 
 
 const router = Router();
 
@@ -35,23 +34,5 @@ router.post('/requestfriend/:_id', requestFriend);
 router.post('/acceptfriend/:_id', acceptFriendInvitation);
 router.post('/unfriend/:_id', unFriend);
 router.post('/abortfriend/:_id', abortRequestFriend);
-
-/* router.get("/auth/facebook", passport.authenticate("facebook"));
-
-router.get(
-  "/auth/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: "/",
-    failureRedirect: "/fail"
-  })
-);
-
-router.get("/fail", (req, res) => {
-  res.send("Failed attempt");
-});
-
-router.get("/", (req, res) => {
-  res.send("Success");
-}); */
 
 export default router;

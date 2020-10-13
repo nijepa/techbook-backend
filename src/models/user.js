@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
     username: {
       type: String,
       unique: true,
-      required: true,
     },
     email: {
       type: String,
@@ -22,7 +21,6 @@ const userSchema = new mongoose.Schema({
     },
     password: {
       type: String,
-      required: true,
       minLength: 7
     },
     tokens: [{
@@ -42,6 +40,13 @@ const userSchema = new mongoose.Schema({
     user_about: {
       type: String
     },
+    picture: {
+      type: String
+    },
+    isSocial: {
+      type: Boolean,
+      default: false
+    },
     isAdmin: {
       type: Boolean,
       default: false
@@ -51,9 +56,8 @@ const userSchema = new mongoose.Schema({
         status: Number,
         enums: [
           0,    //'add friend',
-          1,    //'requested',
-          2,    //'pending',
-          3,    //'friends'
+          1,    //'friends',
+          2,    //'requested',
         ] 
       } 
     ],
@@ -93,7 +97,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
   myError.prototype = new Error()
   const user = await User.findOne({ email})
   if (!user) {
-    //throw new myError({ error: 'Invalid login email credentials' })
     throw new myError('Invalid login email credentials');
   }
   const isPasswordMatch = await bcrypt.compare(password, user.password);

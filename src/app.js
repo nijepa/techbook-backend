@@ -30,8 +30,6 @@ app.use(async (req, res, next) => {
 
 app.use('/users', routes.user);
 app.use('/posts', routes.post);
-/* app.use('/session', routes.session);
-app.use('/comments', routes.comment); */
 
 app.use((error, req, res, next) => {
   if (!error.statusCode) error.statusCode = 500;
@@ -54,9 +52,6 @@ app.get('*', function (req, res, next) {
 
   next(error);
 });
-
-//const auth = require('./routes/auth.js');
-//app.use('/auth', auth);
 
 // Middleware for serving '/dist' directory
 //const staticFileMiddleware = express.static('dist');
