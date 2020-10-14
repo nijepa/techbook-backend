@@ -1,3 +1,5 @@
+import Post from '../models/post.js';
+
 /* List of all posts */
 const post_list = async (req, res) => {
   const posts = await req.context.models.Post.find()
@@ -145,7 +147,8 @@ const post_update = async (req, res, next) => {
   
   const postNew = await req.context.models.Post.findById(
     post._id,
-  ).populate('user');
+  ).populate('user')
+  .populate({path: 'comments', select: 'text createdAt likes', populate: 'author'});
 
   return res.send(postNew);
 };
