@@ -4,8 +4,10 @@ import Post from '../models/post.js';
 const post_list = async (req, res) => {
   const posts = await req.context.models.Post.find()
     .populate('post')
-    .populate({path: 'comments', select: 'text createdAt likes', populate: 'author'})
-    .populate('user')
+    .populate({path: 'comments', select: 'text createdAt likes', 
+                populate: { path:'author', 
+                            select: 'username email first_name last_name picture isSocial friends likes createdAt name'}})
+    .populate('user', 'username email first_name last_name picture isSocial friends likes createdAt name')
     .sort([['createdAt', -1]])
   return res.send(posts);
 };
@@ -14,8 +16,10 @@ const post_list = async (req, res) => {
 const post_user_list = async (req, res) => {
   const posts = await req.context.models.Post.find({ user: req.params.userId })
     .populate('post')
-    .populate({path: 'comments', select: 'text createdAt likes', populate: 'author'})
-    .populate('user')
+    .populate({path: 'comments', select: 'text createdAt likes', 
+                populate: { path: 'author', 
+                            select: 'username email first_name last_name picture isSocial friends likes createdAt name'}})
+    .populate('user', 'username email first_name last_name picture isSocial friends likes createdAt name')
   return res.send(posts);
 };
 
@@ -37,7 +41,8 @@ const post_add = async (req, res, next) => {
   const postNew = await req.context.models.Post.findById(
     post._id,
   )
-  .populate('user');
+  .populate('user', 'username email first_name last_name picture isSocial friends likes createdAt name');
+
   return res.send(postNew);
 };
 
@@ -58,7 +63,9 @@ const post_comment = async (req, res, next) => {
   const upPost = await req.context.models.Post.findById(
     req.body.id,
   )
-  .populate({path: 'comments', select: 'text createdAt likes', populate: 'author'});
+  .populate({path: 'comments', select: 'text createdAt likes', 
+              populate: { path: 'author', 
+                          select: 'username email first_name last_name picture isSocial friends likes createdAt name'}});
 
   return res.send(upPost);
 };
@@ -147,8 +154,10 @@ const post_update = async (req, res, next) => {
   
   const postNew = await req.context.models.Post.findById(
     post._id,
-  ).populate('user')
-  .populate({path: 'comments', select: 'text createdAt likes', populate: 'author'});
+  ).populate('user', 'username email first_name last_name picture isSocial friends likes createdAt name')
+  .populate({path: 'comments', select: 'text createdAt likes', 
+              populate: { path: 'author', 
+                          select: 'username email first_name last_name picture isSocial friends likes createdAt name'}});
 
   return res.send(postNew);
 };

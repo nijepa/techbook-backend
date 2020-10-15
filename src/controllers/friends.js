@@ -3,22 +3,33 @@ import mongodb from 'mongodb';
 
 // List of friends for selected user
 const getFriends = async (req, res) => {
-  let id = req.params._id;
-  let user = await User.aggregate([
-    {$match: {"_id": mongodb.ObjectId(id)}},
-    {$project: {
-      shapes: {$filter: {
-        input: '$friends',
-        as: 'friend',
-        cond: {$eq: ['$$friend.status', 1]}
+  try {
+    let id = req.params._id;
+    let user = await User.aggregate([
+      {$match: {"_id": mongodb.ObjectId(id)}},
+      {$project: {
+        shapes: {$filter: {
+          input: '$friends',
+          as: 'friend',
+          cond: {$eq: ['$$friend.status', 1]}
+        }},
+        "_id": 0,//0 means do not show the field
       }},
-      _id: 0, //0 means do not show the field
-    }},
-    { $lookup: {from: 'users', localField: 'shapes.user', foreignField: '_id', as: 'friends'} }
-  ])
-  res.json({
-    user
-  });
+      { $lookup: {from: 'users', localField: 'shapes.user', foreignField: '_id', as: 'friends'} }
+    ])
+
+    user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
+                                    isSocial, friends, likes, createdAt, name }) => ({
+      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name
+    }));
+
+    res.json({
+      user
+    });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+
 };
 
 // List of NOT friends for selected user 
@@ -28,7 +39,10 @@ const notFriends = async(req, res) => {
     let users = await User.find({
       "_id": {"$ne": id},
       "friends.user": { "$nin": id } }
-    )  
+    )
+    .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
+              'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+
     res.json({
       users
     });
@@ -39,42 +53,62 @@ const notFriends = async(req, res) => {
 
 // List of friend requests
 const getFriendRequests = async (req, res) => {
-  let id = req.params._id;
-  let user = await User.aggregate([
-    {$match: {"_id": mongodb.ObjectId(id)}},
-    {$project: {
-      shapes: {$filter: {
-        input: '$friends',
-        as: 'friend',
-        cond: {$eq: ['$$friend.status', 0]}
+  try {
+    let id = req.params._id;
+    let user = await User.aggregate([
+      {$match: {"_id": mongodb.ObjectId(id)}},
+      {$project: {
+        shapes: {$filter: {
+          input: '$friends',
+          as: 'friend',
+          cond: {$eq: ['$$friend.status', 0]}
+        }},
+          _id: 0, //0 means do not show the field
       }},
-        _id: 0, //0 means do not show the field
-    }},
-    { $lookup: {from: 'users', localField: 'shapes.user', foreignField: '_id', as: 'friends'} }
-  ])
-  res.json({
-    user
-  });
+      { $lookup: {from: 'users', localField: 'shapes.user', foreignField: '_id', as: 'friends'} }
+    ])
+
+    user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
+                                  isSocial, friends, likes, createdAt, name }) => ({
+      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name
+    }));
+
+    res.json({
+      user
+    });
+  } catch (error) {
+    res.status(400).send(error);
+  }
 }
 
 // Listt of friend invitations
 const getFriendInvitations = async (req, res) => {
-  let id = req.params._id;
-  let user = await User.aggregate([
-    {$match: {"_id": mongodb.ObjectId(id)}},
-    {$project: {
-      shapes: {$filter: {
-        input: '$friends',
-        as: 'friend',
-        cond: {$eq: ['$$friend.status', 2]}
+  try {
+    let id = req.params._id;
+    let user = await User.aggregate([
+      {$match: {"_id": mongodb.ObjectId(id)}},
+      {$project: {
+        shapes: {$filter: {
+          input: '$friends',
+          as: 'friend',
+          cond: {$eq: ['$$friend.status', 2]}
+        }},
+          _id: 0, //0 means do not show the field
       }},
-        _id: 0, //0 means do not show the field
-    }},
-    { $lookup: {from: 'users', localField: 'shapes.user', foreignField: '_id', as: 'friends'} }
-  ])
-  res.json({
-    user
-  });
+      { $lookup: {from: 'users', localField: 'shapes.user', foreignField: '_id', as: 'friends'} }
+    ])
+
+    user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
+                                  isSocial, friends, likes, createdAt, name }) => ({
+      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name
+    }));
+
+    res.json({
+      user
+    });
+  } catch (error) {
+    res.status(400).send(error);
+  }
 }
 
 // Request friend
@@ -86,6 +120,9 @@ const requestFriend = async (req, res) => {
     let newFriend = await User.findOneAndUpdate(
       { _id: req.body.friend_id },
       { $push: { 'friends': {'user': req.params._id, 'status': 2 } }})
+      .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+
     return res.send(newFriend);
   } catch (error) {
     res.status(400).send(error);
@@ -101,6 +138,9 @@ const abortRequestFriend = async (req, res) => {
     let newFriend = await User.findOneAndUpdate(
       { _id: req.body.friend_id },
       { $pull: { 'friends': {'user': req.params._id } }})
+      .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+
     return res.send(newFriend);
   } catch (error) {
     res.status(400).send(error);
@@ -116,6 +156,9 @@ const acceptFriendInvitation = async (req, res) => {
     let newFriend = await User.findOneAndUpdate(
       { _id: req.body.friend_id, friends: {$elemMatch: {user:req.params._id }}},
       { "$set": { "friends.$.status": 1 } })
+      .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+
     return res.send(newFriend);
   } catch (error) {
     res.status(400).send(error);
@@ -131,6 +174,9 @@ const unFriend = async (req, res) => {
     let newFriend = await User.findOneAndUpdate(
       { _id: req.body.friend_id },
       { $pull: { 'friends': {'user': req.params._id } }})
+      .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+                
     return res.send(newFriend);
   } catch (error) {
     res.status(400).send(error);
