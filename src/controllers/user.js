@@ -1,12 +1,16 @@
 import User from '../models/user.js';
 import auth from '../middleware/auth.js';
 import Router from 'express';
+import bcrypt from 'bcrypt';
 
 const router = Router();
 
 // List of all users
 const users_list = async (req, res) => {
-  const users = await req.context.models.User.find();
+  const users = await req.context.models.User.find()
+    .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1, 'user_about':1 });
+                
   return res.send(users);
 };
 
@@ -77,7 +81,7 @@ const user_logout = async (req, res) => {
 };
 
 // Log user out of all devices
-/* router.post('/me/logoutall', auth, async(req, res) => {
+router.post('/me/logoutall', auth, async(req, res) => {
   try {
       req.user.tokens.splice(0, req.user.tokens.length)
       await req.user.save()
@@ -85,7 +89,7 @@ const user_logout = async (req, res) => {
   } catch (error) {
       res.status(500).send(error)
   }
-}) */
+})
 
 /* router.get('/:userId', auth, async (req, res) => {
   const user = await req.context.models.User.findById(
@@ -111,7 +115,8 @@ const user_update = async (req, res) => {
         email: req.body.email,
         first_name: req.body.first_name,
         last_name: req.body.last_name,
-        user_about: req.body.user_about }, 
+        user_about: req.body.user_about,
+        picture: req.body.picture }, 
       function (err, docs) { 
         if (err){ 
           res.status(500).send(err)

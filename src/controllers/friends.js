@@ -19,8 +19,8 @@ const getFriends = async (req, res) => {
     ])
 
     user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
-                                    isSocial, friends, likes, createdAt, name }) => ({
-      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name
+                                    isSocial, friends, likes, createdAt, name, user_about }) => ({
+      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name, user_about
     }));
 
     res.json({
@@ -41,7 +41,7 @@ const notFriends = async(req, res) => {
       "friends.user": { "$nin": id } }
     )
     .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
-              'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+              'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1, 'user_about':1 })
 
     res.json({
       users
@@ -69,8 +69,8 @@ const getFriendRequests = async (req, res) => {
     ])
 
     user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
-                                  isSocial, friends, likes, createdAt, name }) => ({
-      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name
+                                  isSocial, friends, likes, createdAt, name, user_about }) => ({
+      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name, user_about
     }));
 
     res.json({
@@ -99,8 +99,8 @@ const getFriendInvitations = async (req, res) => {
     ])
 
     user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
-                                  isSocial, friends, likes, createdAt, name }) => ({
-      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name
+                                  isSocial, friends, likes, createdAt, name, user_about }) => ({
+      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name, user_about
     }));
 
     res.json({
@@ -117,11 +117,12 @@ const requestFriend = async (req, res) => {
     let friend = await User.findOneAndUpdate(
       { _id: req.params._id },
       { $push: { 'friends': {'user': req.body.friend_id, 'status': 0 } }});
+      
     let newFriend = await User.findOneAndUpdate(
       { _id: req.body.friend_id },
       { $push: { 'friends': {'user': req.params._id, 'status': 2 } }})
       .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
-                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1, 'user_about':1 })
 
     return res.send(newFriend);
   } catch (error) {
@@ -139,7 +140,7 @@ const abortRequestFriend = async (req, res) => {
       { _id: req.body.friend_id },
       { $pull: { 'friends': {'user': req.params._id } }})
       .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
-                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1, 'user_about':1 })
 
     return res.send(newFriend);
   } catch (error) {
@@ -157,7 +158,7 @@ const acceptFriendInvitation = async (req, res) => {
       { _id: req.body.friend_id, friends: {$elemMatch: {user:req.params._id }}},
       { "$set": { "friends.$.status": 1 } })
       .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
-                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1, 'user_about':1 })
 
     return res.send(newFriend);
   } catch (error) {
@@ -175,7 +176,7 @@ const unFriend = async (req, res) => {
       { _id: req.body.friend_id },
       { $pull: { 'friends': {'user': req.params._id } }})
       .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
-                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1})
+                'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1, 'user_about':1 })
                 
     return res.send(newFriend);
   } catch (error) {

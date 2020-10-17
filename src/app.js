@@ -56,10 +56,10 @@ app.get('*', function (req, res, next) {
 // Middleware for serving '/dist' directory
 //const staticFileMiddleware = express.static('dist');
 
-// 1st call for unredirected requests 
+// 1st call for unredirected requests
 //app.use(staticFileMiddleware);
 
-// Support history api 
+// Support history api
 app.use(history({
   index: '/dist/index.html'
 }));

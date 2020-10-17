@@ -30,9 +30,9 @@ router.get('/friends/:_id', getFriends);
 router.get('/notfriends/:_id', notFriends);
 router.get('/getrequestfriend/:_id', getFriendRequests);
 router.get('/getfriendinvitation/:_id', getFriendInvitations);
-router.post('/requestfriend/:_id', requestFriend);
-router.post('/acceptfriend/:_id', acceptFriendInvitation);
-router.post('/unfriend/:_id', unFriend);
-router.post('/abortfriend/:_id', abortRequestFriend);
+router.post('/requestfriend/:_id', auth, requestFriend);
+router.post('/acceptfriend/:_id', auth, acceptFriendInvitation);
+router.post('/unfriend/:_id', auth, unFriend);
+router.post('/abortfriend/:_id', auth, abortRequestFriend);
 
 export default router;
