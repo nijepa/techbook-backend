@@ -19,8 +19,9 @@ const getFriends = async (req, res) => {
     ])
 
     user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
-                                    isSocial, friends, likes, createdAt, name, user_about }) => ({
-      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name, user_about
+                                  isSocial, friends, likes, createdAt, name, user_about }) => ({
+      _id, username, email, first_name, last_name, picture, 
+      isSocial, friends, likes, createdAt, name, user_about
     }));
 
     res.json({
@@ -29,7 +30,6 @@ const getFriends = async (req, res) => {
   } catch (error) {
     res.status(400).send(error);
   }
-
 };
 
 // List of NOT friends for selected user 
@@ -70,7 +70,8 @@ const getFriendRequests = async (req, res) => {
 
     user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
                                   isSocial, friends, likes, createdAt, name, user_about }) => ({
-      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name, user_about
+      _id, username, email, first_name, last_name, picture, 
+      isSocial, friends, likes, createdAt, name, user_about
     }));
 
     res.json({
@@ -100,7 +101,8 @@ const getFriendInvitations = async (req, res) => {
 
     user = user[0].friends.map(({ _id, username, email, first_name, last_name, picture, 
                                   isSocial, friends, likes, createdAt, name, user_about }) => ({
-      _id, username, email, first_name, last_name, picture, isSocial, friends, likes, createdAt, name, user_about
+      _id, username, email, first_name, last_name, picture, 
+      isSocial, friends, likes, createdAt, name, user_about
     }));
 
     res.json({
@@ -117,7 +119,7 @@ const requestFriend = async (req, res) => {
     let friend = await User.findOneAndUpdate(
       { _id: req.params._id },
       { $push: { 'friends': {'user': req.body.friend_id, 'status': 0 } }});
-      
+
     let newFriend = await User.findOneAndUpdate(
       { _id: req.body.friend_id },
       { $push: { 'friends': {'user': req.params._id, 'status': 2 } }})

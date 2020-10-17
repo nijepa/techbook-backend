@@ -1,7 +1,6 @@
 import User from '../models/user.js';
 import auth from '../middleware/auth.js';
 import Router from 'express';
-import bcrypt from 'bcrypt';
 
 const router = Router();
 
@@ -10,10 +9,9 @@ const users_list = async (req, res) => {
   const users = await req.context.models.User.find()
     .select({ 'name': 1, '_id': 1 , 'username':1, 'email':1, 'first_name':1, 'last_name':1, 
                 'picture':1, 'isSocial':1, 'friends':1, 'likes':1, 'createdAt':1, 'user_about':1 });
-                
+
   return res.send(users);
 };
-
 
 // Register new user
 const user_signup = async (req, res, next) => {
