@@ -35,6 +35,7 @@ const post_add = async (req, res, next) => {
   const post = await req.context.models.Post.create({
     title: req.body.title,
     text: req.body.text,
+    img_url: req.body.img_url,
     user: req.body.user,
   }).catch((error) => next(new BadRequestError(error)));
 
@@ -148,7 +149,8 @@ const post_update = async (req, res, next) => {
   const post = await req.context.models.Post.findOneAndUpdate({ 
     _id: req.params.postId }, 
     { title: req.body.title, 
-      text: req.body.text, 
+      text: req.body.text,
+      img_url: req.body.img_url, 
       user: req.body.user }
   ).catch((error) => next(new BadRequestError(error)));
   

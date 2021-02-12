@@ -10,6 +10,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    img_url: {
+      type: String,
+      required: false,
+    },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     comments: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Comment'} ],
     likes: [ { type: mongoose.Schema.Types.ObjectId, ref: 'User'} ]
