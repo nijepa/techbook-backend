@@ -2,6 +2,11 @@ import Post from '../models/post.js';
 
 /* List of all posts */
 const post_list = async (req, res) => {
+  //const resultsPerPage = 5;
+  //let page = req.params.page >= 1 ? req.params.page : 1;
+  var page = parseInt(req.params.page) || 0; //for next page pass 1 here
+  var resultsPerPage = parseInt(req.params.limit) || 5;
+  //page = page - 1;
   const posts = await req.context.models.Post.find()
     .populate('post')
     .populate({path: 'comments', select: 'text createdAt likes', 
@@ -9,7 +14,25 @@ const post_list = async (req, res) => {
                             select: 'username email first_name last_name picture isSocial friends likes createdAt name user_about'}})
     .populate('user', 'username email first_name last_name picture isSocial friends likes createdAt name user_about')
     .sort([['createdAt', -1]])
-  return res.send(posts);
+    .limit(resultsPerPage)
+    .skip(resultsPerPage * page)
+    .exec((err, doc) => {
+      if (err) {
+        return res.json(err);
+      }
+      Post.countDocuments().exec((count_error, count) => {
+        if (err) {
+          return res.json(count_error);
+        }
+        return res.json({
+          total: count,
+          page: page,
+          pageSize: doc.length,
+          posts: doc
+        });
+      });
+    });
+  //return res.send(posts);
 };
 
 /* List of user posts */

@@ -5,7 +5,7 @@ import { connectDB } from './config/db.js'
 import models from './models/index.js';
 import routes from './routes/index.js';
 import history from 'connect-history-api-fallback';
-
+//mon --exec babel-node
 const app = express();
 
 app.use(express.json());

@@ -15,7 +15,7 @@ import auth from '../middleware/auth.js';
 const router = Router();
 
 /* List of all posts */
-router.get('/', post_list);
+router.get('/:page', post_list);
 router.get('/user/:userId', post_user_list);
 router.get('/:postId', post_one);
 router.post('/', auth, post_add);
