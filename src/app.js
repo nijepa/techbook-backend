@@ -1,11 +1,12 @@
-import 'dotenv/config.js';
+import dotenv from 'dotenv'
+dotenv.config()
 import cors from 'cors';
+import helmet from 'helmet';
 import express from 'express';
 import { connectDB } from './config/db.js'
 import models from './models/index.js';
 import routes from './routes/index.js';
-import history from 'connect-history-api-fallback';
-//mon --exec babel-node
+
 const app = express();
 
 app.use(express.json());
@@ -18,7 +19,8 @@ app.use(
   })
 );
 app.options('*', cors());
-//app.use(cors());
+
+app.use(helmet());
 
 app.use(async (req, res, next) => {
   req.context = {
@@ -28,8 +30,10 @@ app.use(async (req, res, next) => {
   next();
 });
 
-app.use('/users', routes.user);
-app.use('/posts', routes.post);
+app.use('/api/v1/users', routes.user);
+app.use('/api/v1/techs', routes.tech);
+app.use('/api/v1/langs', routes.lang);
+app.use('/api/v1/articles', routes.article);
 
 app.use((error, req, res, next) => {
   if (!error.statusCode) error.statusCode = 500;
@@ -53,22 +57,8 @@ app.get('*', function (req, res, next) {
   next(error);
 });
 
-// Middleware for serving '/dist' directory
-//const staticFileMiddleware = express.static('dist');
-
-// 1st call for unredirected requests
-//app.use(staticFileMiddleware);
-
-// Support history api
-app.use(history({
-  index: '/dist/index.html'
-}));
-
-// 2nd call for redirected requests
-//app.use(staticFileMiddleware);
-
 connectDB().then(async () => {
   app.listen(process.env.PORT, () =>
-    console.log(`Odinbook app listening on port ${process.env.PORT}!`),
+    console.log(`Techbook app listening on port ${process.env.PORT}!`),
   );
 });

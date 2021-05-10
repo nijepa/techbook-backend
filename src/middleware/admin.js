@@ -1,4 +1,4 @@
-const admin = async(req, res, next) => {
+const admin = async (req, res, next) => {
   try {
     if (req.user.isAdmin) {
       next();
@@ -6,8 +6,8 @@ const admin = async(req, res, next) => {
       throw new Error();
     }
   } catch (error) {
-    res.status(401).send({ error: 'Only admin resource' });
+    res.status(401).send({ error: "Only admin resource" });
   }
-}
+};
 
 export default admin;
