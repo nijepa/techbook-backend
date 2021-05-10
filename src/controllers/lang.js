@@ -29,7 +29,7 @@ const lang_add = async (req, res, next) => {
     img_url: req.body.img_url,
     user: req.body.user,
     tech: req.body.tech,
-  }).catch((error) => next(new BadRequestError(error)));
+  }).catch((error) => next(new Error(error.message)));
 
   const langNew = await req.context.models.Lang.findById(
     lang._id,
@@ -52,7 +52,7 @@ const lang_update = async (req, res, next) => {
       img_url: req.body.img_url, 
       user: req.body.user,
       tech: req.body.tech, }
-  ).catch((error) => next(new BadRequestError(error)));
+  ).catch((error) => next(new Error(error.message)));
   
   const langNew = await req.context.models.Lang.findById(
     lang._id,

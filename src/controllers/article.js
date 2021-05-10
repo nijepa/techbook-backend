@@ -88,7 +88,7 @@ const article_update = async (req, res, next) => {
         img_url: lang.img_url,
       },
     }
-  ).catch((error) => next(new BadRequestError(error)));
+  ).catch((error) => next(new Error(error.message)));
 
   const articleNew = await req.context.models.Article.findById(
     article._id
