@@ -10,7 +10,6 @@ import auth from "../middleware/auth.js";
 
 const router = Router();
 
-/* List of all tech */
 router.get("/", tech_list);
 router.get("/:techId", tech_one);
 router.post("/", auth, tech_add);

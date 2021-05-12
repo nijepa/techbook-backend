@@ -27,13 +27,24 @@ const users_list = async (req, res) => {
 // Register new user
 const user_signup = async (req, res, next) => {
   try {
-    const exists = await User.findOne({ email: req.body.email });
-    if (exists) {
-      return res.status(401).send({ error: "User allready exists" });
+    let user = await User.findOne({ email: req.body.email });
+    if (user) {
+      return res
+        .status(401)
+        .send({ error: `User with email ${req.body.email} allready exists` });
     }
-    const user = new User(req.body);
+    user = await User.findOne({ username: req.body.username });
+    if (user) {
+      return res
+        .status(401)
+        .send({ error: `Username ${req.body.username} is taken` });
+    }
+
+    user = new User(req.body);
     await user.save();
     const token = await user.generateAuthToken();
+
+    user = user_return(user);
     res.status(201).send({ user, token });
   } catch (error) {
     res.status(400).send(error);
@@ -44,6 +55,11 @@ const user_signup = async (req, res, next) => {
 const user_login = async (req, res) => {
   const existsEmail = await User.findOne({ email: req.body.email });
   if (!existsEmail) {
+    return res.status(401).send({
+      error: `Login failed! User with email: ${req.body.email} does not exists, please signup first or check if email is the right one.`,
+    });
+  }
+  /*   if (!existsEmail) {
     try {
       const user = new User(req.body);
       await user.save();
@@ -52,25 +68,39 @@ const user_login = async (req, res) => {
     } catch (error) {
       return res.status(400).send(error);
     }
-  }
+  } */
   try {
     if (existsEmail.isSocial === true) {
-      const user = existsEmail;
+      let user = existsEmail;
       const token = await user.generateAuthToken();
-      return res.send({ user, token });
+      user = user_return(user);
+      res.send({ user, token });
+      return res.status(201).send({ user, token });
     }
     const { email, password } = req.body;
-    const user = await User.findByCredentials(email, password);
+    let user = await User.findByCredentials(email, password);
     if (!user) {
       return res
         .status(401)
         .send({ error: "Login failed! Check authentication credentials" });
     }
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+    user = user_return(user);
+    res.status(201).send({ user, token });
   } catch (error) {
     res.status(400).send(error);
   }
+};
+
+// Compose user return fields
+const user_return = (user) => {
+  const userNew = {
+    _id: user._id,
+    username: user.username,
+    email: user.email,
+    name: user.name,
+  };
+  return userNew;
 };
 
 // View logged in user profile
@@ -85,7 +115,7 @@ const user_logout = async (req, res) => {
       return token.token != req.token;
     });
     await req.user.save();
-    res.send();
+    res.status(200).send();
   } catch (error) {
     res.status(500).send(error);
   }

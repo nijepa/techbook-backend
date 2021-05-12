@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
+      minLength: 1,
       unique: true,
     },
     email: {
@@ -23,6 +24,14 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       minLength: 7,
+      validate: {
+        validator: function (v) {
+          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{7,})/.test(v);
+        },
+        message: (props) =>
+          `${props.value} Password must be greater than 7 and contain at least one uppercase letter, one lowercase letter, and one number!`,
+      },
+      //required: [true, 'Password required']
     },
     tokens: [
       {
@@ -78,7 +87,8 @@ userSchema.pre("save", async function (next) {
   // Hash the password before saving the user model
   const user = this;
   if (user.isModified("password")) {
-    user.password = await bcrypt.hash(user.password, 8);
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
   }
   next();
 });
@@ -86,7 +96,11 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.generateAuthToken = async function () {
   // Generate an auth token for the user
   const user = this;
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY);
+  let token = jwt.sign({ _id: user._id }, process.env.JWT_KEY);
+
+  //const salt = await bcrypt.genSalt(10);
+  //const token = await bcrypt.hash(tokenO, salt);
+
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;

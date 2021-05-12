@@ -10,7 +10,6 @@ import auth from "../middleware/auth.js";
 
 const router = Router();
 
-/* List of all lang */
 router.get("/", lang_list);
 router.get("/:langId", lang_one);
 router.post("/", auth, lang_add);

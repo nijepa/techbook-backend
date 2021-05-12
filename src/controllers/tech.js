@@ -1,7 +1,7 @@
 import { Tech, validateTech } from "../models/tech.js";
 
 /* List of all techs */
-const tech_list = async (req, res) => {
+const tech_list = async (req, res, next) => {
   const techs = await req.context.models.Tech.find()
     .populate("tech")
     .populate("user", "username email picture isSocial createdAt name")
@@ -56,7 +56,7 @@ const tech_add = async (req, res, next) => {
 const tech_update = async (req, res, next) => {
   const { error } = validateTech(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  
+
   const tech = await req.context.models.Tech.findOneAndUpdate(
     {
       _id: req.params.techId,

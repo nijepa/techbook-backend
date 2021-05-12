@@ -32,18 +32,18 @@ const articleSchema = new mongoose.Schema(
         title: {
           type: String,
           required: true,
-          trim: true, 
+          trim: true,
           minlength: 5,
-          maxlength: 255
+          maxlength: 255,
         },
-        img_url: { 
-          type: String, 
+        img_url: {
+          type: String,
           required: false,
           min: 0,
-          max: 555
-        }   
+          max: 555,
+        },
       }),
-      required: true
+      required: true,
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
@@ -63,7 +63,7 @@ function validateArticle(article) {
     img_url: Joi.string().min(3),
     user: Joi.string().min(3),
     links: Joi.array().items(Joi.string()),
-    langId: myJoiObjectId().required()
+    langId: myJoiObjectId().required(),
   });
 
   return schema.validate(article);
