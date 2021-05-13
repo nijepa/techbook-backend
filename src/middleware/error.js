@@ -9,5 +9,6 @@ export default (error, req, res, next) => {
     return res.status(404).redirect("/not-found");
   }
 
-  return res.status(error.statusCode).json({ error: error.toString() });
+  res.status(error.statusCode).json({ error: error.toString() });
+  next();
 };

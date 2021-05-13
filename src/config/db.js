@@ -14,6 +14,7 @@ dotenv.config();
  */
 
 const conn = process.env.MONGODB_URI;
+//const conn = process.env.MONGODB_URI_TEST;
 
 const connectDB = () => {
   return mongoose
@@ -23,8 +24,10 @@ const connectDB = () => {
       useUnifiedTopology: true,
       useFindAndModify: false,
     })
-    .then(() => console.log("Connected to MongoDB..."))
-    .catch((err) => console.error("Could not connect to MongoDB..."));
+    .then(() => console.log(`Connected to ${conn} ...`))
+    .catch((err) =>
+      console.error(`Could not connect to ${conn} , error: ${err}`)
+    );
 };
 // Expose the connection
 export { connectDB };

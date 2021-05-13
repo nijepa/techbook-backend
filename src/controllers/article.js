@@ -66,10 +66,10 @@ const article_add = async (req, res, next) => {
 /* Update selected article */
 const article_update = async (req, res, next) => {
   const { error } = validateArticle(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).json({"error": error.details[0].message.toString()});
 
   const lang = await Lang.findById(req.body.langId);
-  if (!lang) return res.status(400).send("Invalid lang.");
+  if (!lang) return res.status(400).json({"error": "Invalid lang."});
 
   const article = await req.context.models.Article.findOneAndUpdate(
     {
@@ -88,7 +88,7 @@ const article_update = async (req, res, next) => {
         img_url: lang.img_url,
       },
     }
-  ).catch((error) => next(new Error(error.message)));
+  ).catch((error) => next(new Error(error)));
 
   const articleNew = await req.context.models.Article.findById(
     article._id
