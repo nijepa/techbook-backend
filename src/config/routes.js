@@ -8,6 +8,9 @@ export default (app) => {
   app.use(URL_PATH + "techs", routes.tech);
   app.use(URL_PATH + "langs", routes.lang);
   app.use(URL_PATH + "articles", routes.article);
+  app.get(URL_PATH, (req, res) => {
+    res.send("<h3>Techbook API is running ...</h3>");
+  });
   app.use(error);
   app.get("*", function (req, res, next) {
     const err = new Error(`${req.ip} tried to access ${req.originalUrl}`);
