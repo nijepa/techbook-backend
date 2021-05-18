@@ -3,6 +3,10 @@ application:
   name: "techbook-backend"
   project: "project1"
   organization: "QoveryCommunity"
+databases:
+- type: "MONGODB"
+  name: "mongo"
+  version: "4.4"
 routers:
 - name: "main-techbook-backend"
   routes:
