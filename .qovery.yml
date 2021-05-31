@@ -1,0 +1,11 @@
+---
+application:
+  name: "techbook-backend"
+  project: "project1"
+  organization: "QoveryCommunity"
+routers:
+- name: "main-techbook-backend"
+  routes:
+  - application_name: "techbook-backend"
+    paths:
+    - "/*"
