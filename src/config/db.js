@@ -16,18 +16,19 @@ dotenv.config();
 const conn = process.env.MONGODB_URI;
 //const conn = process.env.MONGODB_URI_TEST;
 
-const connectDB = () => {
-  return mongoose
-    .connect(conn, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    })
-    .then(() => console.log(`Connected to ${conn} ...`))
-    .catch((err) =>
-      console.error(`Could not connect to ${conn} , error: ${err}`)
-    );
+const connectDB = async () => {
+  try {
+    await mongoose
+      .connect(conn, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      });
+    return console.log(`Connected to ${conn} ...`);
+  } catch (err) {
+    return console.error(`Could not connect to ${conn} , error: ${err}`);
+  }
 };
 // Expose the connection
 export { connectDB };

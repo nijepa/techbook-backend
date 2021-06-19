@@ -26,6 +26,7 @@ const lang_add = async (req, res, next) => {
     description: req.body.description,
     img_url: req.body.img_url,
     user: req.body.user,
+    groups: req.body.groups,
     tech: req.body.tech,
   }).catch((error) => next(new Error(error.message)));
 
@@ -50,6 +51,7 @@ const lang_update = async (req, res, next) => {
       description: req.body.description,
       img_url: req.body.img_url,
       user: req.body.user,
+      groups: req.body.groups,
       tech: req.body.tech,
     }
   ).catch((error) => next(new Error(error.message)));

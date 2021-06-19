@@ -12,8 +12,8 @@ const router = Router();
 
 router.get("/", article_list);
 router.get("/:articleId", article_one);
-router.post("/", auth, article_add);
-router.patch("/:articleId", auth, article_update);
-router.delete("/:articleId", auth, article_delete);
+router.post("/", article_add);
+router.patch("/:articleId", article_update);
+router.delete("/:articleId", article_delete);
 
 export default router;

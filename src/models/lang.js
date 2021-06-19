@@ -19,6 +19,7 @@ const langSchema = new mongoose.Schema(
       minlength: 5,
       maxlength: 550,
     },
+    groups: [],
     links: [String],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     tech: { type: mongoose.Schema.Types.ObjectId, ref: "Tech" },
@@ -39,6 +40,7 @@ function validateLang(lang) {
     links: Joi.array().items(Joi.string()),
     user: Joi.string().min(3),
     tech: Joi.string().min(3),
+    groups: Joi.array().items(Joi.string()),
   });
 
   return schema.validate(lang);

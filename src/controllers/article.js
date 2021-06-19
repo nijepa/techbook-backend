@@ -49,6 +49,7 @@ const article_add = async (req, res, next) => {
     img_url: req.body.img_url,
     user: req.body.user,
     links: req.body.links,
+    groups: req.body.groups,
     lang: {
       _id: lang._id,
       title: lang.title,
@@ -82,13 +83,14 @@ const article_update = async (req, res, next) => {
       img_url: req.body.img_url,
       user: req.body.user,
       links: req.body.links,
+      groups: req.body.groups,
       lang: {
         _id: lang._id,
         title: lang.title,
         img_url: lang.img_url,
       },
     }
-  ).catch((error) => next(new Error(error)));
+  ).catch((error) => next(new Error('zuu', error)));
 
   const articleNew = await req.context.models.Article.findById(
     article._id
@@ -103,7 +105,7 @@ const article_delete = async (req, res) => {
     req.params.articleId
   );
 
-  if (tech) {
+  if (article) {
     await article.remove();
   }
   return res.send(article);

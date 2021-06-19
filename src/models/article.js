@@ -20,13 +20,13 @@ const articleSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    links: [String],
     img_url: {
       type: String,
       required: false,
-      minlength: 5,
+      minlength: 0,
       maxlength: 550,
     },
+    links: [String],
     lang: {
       type: new mongoose.Schema({
         title: {
@@ -45,6 +45,7 @@ const articleSchema = new mongoose.Schema(
       }),
       required: true,
     },
+    groups: [String],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
@@ -57,13 +58,19 @@ const articleSchema = new mongoose.Schema(
 
 function validateArticle(article) {
   const schema = Joi.object({
+    _id: Joi.string(),
     title: Joi.string().min(1).required(),
     description: Joi.string().min(3),
     code: Joi.string().min(3),
-    img_url: Joi.string().min(3),
+    img_url: Joi.string().allow(null, ''),
     user: Joi.string().min(3),
     links: Joi.array().items(Joi.string()),
+    lang: Joi.object(),
     langId: myJoiObjectId().required(),
+    groups: Joi.array().items(Joi.string()),
+    createdAt: Joi.date(),
+    updatedAt: Joi.date(),
+    __v: Joi.number()
   });
 
   return schema.validate(article);
