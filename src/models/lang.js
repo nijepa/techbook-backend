@@ -19,7 +19,7 @@ const langSchema = new mongoose.Schema(
       minlength: 5,
       maxlength: 550,
     },
-    groups: [],
+    groups: [String],
     links: [String],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     tech: { type: mongoose.Schema.Types.ObjectId, ref: "Tech" },
