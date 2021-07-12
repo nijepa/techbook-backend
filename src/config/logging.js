@@ -3,13 +3,13 @@ import "winston-mongodb";
 import "express-async-errors";
 
 export default () => {
-  winston.add(
+/*   winston.add(
     new winston.transports.File({
       filename: "logfile.log",
       handleRejections: true,
       handleExceptions: true,
     })
-  );
+  ); */
 
   winston.add(
     new winston.transports.MongoDB({
