@@ -46,6 +46,28 @@ const articleSchema = new mongoose.Schema(
       required: true,
     },
     groups: [String],
+    favorite: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    bookmark: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    finish: {
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    percent: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0,
+      required: false
+    },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
@@ -68,6 +90,10 @@ function validateArticle(article) {
     lang: Joi.object(),
     langId: myJoiObjectId().required(),
     groups: Joi.array().items(Joi.string()),
+    favorite: Joi.boolean(),
+    bookmark: Joi.boolean(),
+    finish: Joi.boolean(),
+    percent: Joi.number(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
     __v: Joi.number()

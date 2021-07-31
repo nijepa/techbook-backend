@@ -50,6 +50,10 @@ const article_add = async (req, res, next) => {
     user: req.body.user,
     links: req.body.links,
     groups: req.body.groups,
+    favorite: req.body.favorite,
+    bookmark: req.body.bookmark,
+    finish: req.body.finish,
+    percent: req.body.percent,
     lang: {
       _id: lang._id,
       title: lang.title,
@@ -84,6 +88,10 @@ const article_update = async (req, res, next) => {
       user: req.body.user,
       links: req.body.links,
       groups: req.body.groups,
+      favorite: req.body.favorite,
+      bookmark: req.body.bookmark,
+      finish: req.body.finish,
+      percent: req.body.percent,
       lang: {
         _id: lang._id,
         title: lang.title,
